@@ -5,6 +5,7 @@ use converter_buddy::format::Format;
 use rocket::fs::NamedFile;
 use rocket::response::status;
 use filename::file_name;
+use log::{info, warn};
 
 #[get("/")]
 fn index() -> &'static str {
@@ -12,6 +13,7 @@ fn index() -> &'static str {
 }
 #[post("/<filename>", format = "image/png", data = "<file>")]
 async fn upload(mut file: TempFile<'_>, filename: String) -> NamedFile {
+    !info(target: "convertRequest", "File upload"); 
     file.persist_to(&filename).await;
     let target_format = Format::Jpeg;
     let file = ConvertibleFile::new(&filename);
